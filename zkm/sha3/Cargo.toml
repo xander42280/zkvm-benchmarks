@@ -1,0 +1,9 @@
+[workspace]
+[package]
+version = "0.1.0"
+name = "sha3-bench"
+edition = "2021"
+
+[dependencies]
+zkm-runtime = { path = "../../../zkm/runtime/entrypoint" }
+sha3 = { version = "0.10.8", default-features = false }
