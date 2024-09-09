@@ -27,7 +27,7 @@ use zkm_prover::verifier::verify_proof;
 const FIBONACCI_ELF: &str = "./fibonacci/target/mips-unknown-linux-musl/debug/fibonacci";
 const SHA2_ELF: &str = "./sha2/target/mips-unknown-linux-musl/debug/sha2-bench";
 const SHA2_CHAIN_ELF: &str = "./sha2-chain/target/mips-unknown-linux-musl/debug/sha2-chain";
-const SHA3_CHAIN_ELF: &str = "./sha2-chain/target/mips-unknown-linux-musl/debug/sha3-chain";
+const SHA3_CHAIN_ELF: &str = "./sha3-chain/target/mips-unknown-linux-musl/debug/sha3-chain";
 const SHA3_ELF: &str = "./sha3/target/mips-unknown-linux-musl/debug/sha3-bench";
 const BIGMEM_ELF: &str = "./bigmem/target/mips-unknown-linux-musl/debug/bigmem";
 
