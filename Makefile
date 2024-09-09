@@ -12,6 +12,7 @@ bench-sp1:
 	cd sp1 && RUSTFLAGS="-C target-cpu=native" cargo run --release --features nightly-features
 
 bench-zkm:
+	make build-zkm
 	cd zkm && cargo run
 
 build-sp1:
@@ -30,10 +31,10 @@ bench-risczero:
 	# cd risczero/sha3 && cargo run --release
 	# cd risczero/bigmem && cargo run --release
 
-bench-zkm:
+build-zkm:
 	cd zkm/sha2-chain && cargo build --target=mips-unknown-linux-musl
-	# cd zkm/fibonacci && cargo build --target=mips-unknown-linux-musl
-	# cd zkm/sha3-chain && cargo build --target=mips-unknown-linux-musl
-	# cd zkm/sha2 && cargo build --target=mips-unknown-linux-musl
-	# cd zkm/sha3 && cargo build --target=mips-unknown-linux-musl
-	# cd zkm/bigmem && cargo build --target=mips-unknown-linux-musl
+	cd zkm/fibonacci && cargo build --target=mips-unknown-linux-musl
+	cd zkm/sha3-chain && cargo build --target=mips-unknown-linux-musl
+	cd zkm/sha2 && cargo build --target=mips-unknown-linux-musl
+	cd zkm/sha3 && cargo build --target=mips-unknown-linux-musl
+	cd zkm/bigmem && cargo build --target=mips-unknown-linux-musl

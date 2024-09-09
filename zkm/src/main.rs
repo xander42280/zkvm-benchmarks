@@ -256,7 +256,8 @@ fn prove_multi_seg_common(
 }
 
 fn init_logger() {
-    std::env::set_var("RUST_LOG", "info")
+    std::env::set_var("RUST_LOG", "info");
+    env_logger::init()
 }
 
 fn benchmark_sha2_chain(iters: u32) -> (Duration, usize) {
