@@ -1,0 +1,24 @@
+[workspace]
+[package]
+version = "0.1.0"
+name = "zkm-script"
+edition = "2021"
+
+[dependencies]
+utils = { path = "../utils" }
+zkm-prover = { git = "https://github.com/zkMIPS/zkm", branch = "main", default-features = false }
+zkm-emulator = { git = "https://github.com/zkMIPS/zkm", branch = "main", default-features = false }
+plonky2 = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
+#starky = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
+plonky2_util = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
+plonky2_maybe_rayon = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
+
+log = { version = "0.4.14", default-features = false }
+serde = { version = "1.0.144", features = ["derive"] }
+serde_json = "1.0"
+byteorder = "1.5.0"
+hex = "0.4"
+env_logger = "0.11.5"
+
+plonky2x = { git = "https://github.com/zkMIPS/succinctx.git", package = "plonky2x", branch = "zkm" }
+plonky2x-derive = { git = "https://github.com/zkMIPS/succinctx.git", package = "plonky2x-derive", branch = "zkm" }
