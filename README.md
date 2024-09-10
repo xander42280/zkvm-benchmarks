@@ -45,7 +45,7 @@ make bench-all
 
 The benchmark results should be outputted in CSV form in `benchmark_outputs`.
 
-To run an individual benchmark run `make bench-jolt`, `make bench-risczero` or `make bench-sp1`.
+To run an individual benchmark run `make bench-zkm`, `make bench-jolt`, `make bench-risczero` or `make bench-sp1`.
 
 
 ## Disclaimer
