@@ -9,7 +9,7 @@ bench-jolt:
 
 bench-sp1:
 	make build-sp1
-	cd sp1 && RUSTFLAGS="-C target-cpu=native" cargo run --release --features nightly-features
+	cd sp1 && RUSTFLAGS="-C target-cpu=native" cargo run --release
 
 bench-zkm:
 	make build-zkm
@@ -25,11 +25,11 @@ build-sp1:
 
 bench-risczero:
 	cd risczero/sha2-chain && RUSTFLAGS="-C target-cpu=native" cargo run --release
-	# cd risczero/fibonacci && cargo run --release
-	# cd risczero/sha3-chain && cargo run --release
-	# cd risczero/sha2 && cargo run --release
-	# cd risczero/sha3 && cargo run --release
-	# cd risczero/bigmem && cargo run --release
+	cd risczero/fibonacci && cargo run --release
+	cd risczero/sha3-chain && cargo run --release
+	cd risczero/sha2 && cargo run --release
+	cd risczero/sha3 && cargo run --release
+	cd risczero/bigmem && cargo run --release
 
 build-zkm:
 	cd zkm/sha2-chain && cargo build --target=mips-unknown-linux-musl
