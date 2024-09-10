@@ -104,12 +104,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8adc4bb1803a324070e64a98ae98f38934d91957a99cfb3a43dcbc01bc56439"
 
 [[package]]
-name = "libm"
-version = "0.2.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ec2a862134d2a7d32d7983ddcdd1c4923530833c9f2ea1a44fc5fa473989058"
-
-[[package]]
 name = "ppv-lite86"
 version = "0.2.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -274,6 +268,7 @@ dependencies = [
 [[package]]
 name = "zkm-precompiles"
 version = "0.1.0"
+source = "git+https://github.com/zkMIPS/zkm?branch=main#0faba3fbbb1fbae2f8d0668adbf1c9adb27f59e3"
 dependencies = [
  "bincode",
  "cfg-if",
@@ -283,12 +278,12 @@ dependencies = [
 [[package]]
 name = "zkm-runtime"
 version = "0.1.0"
+source = "git+https://github.com/zkMIPS/zkm?branch=main#0faba3fbbb1fbae2f8d0668adbf1c9adb27f59e3"
 dependencies = [
  "bincode",
  "cfg-if",
  "getrandom",
  "lazy_static",
- "libm",
  "rand",
  "serde",
  "sha2",

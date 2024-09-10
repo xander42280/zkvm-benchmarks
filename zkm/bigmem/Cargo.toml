@@ -5,4 +5,4 @@ name = "bigmem"
 edition = "2021"
 
 [dependencies]
-zkm-runtime = { path = "../../../zkm/runtime/entrypoint" }
+zkm-runtime = { git = "https://github.com/zkMIPS/zkm", branch = "main", default-features = false }
