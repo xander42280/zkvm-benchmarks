@@ -30,6 +30,7 @@ const SHA2_CHAIN_ELF: &str = "./sha2-chain/target/mips-unknown-linux-musl/debug/
 const SHA3_CHAIN_ELF: &str = "./sha3-chain/target/mips-unknown-linux-musl/debug/sha3-chain";
 const SHA3_ELF: &str = "./sha3/target/mips-unknown-linux-musl/debug/sha3-bench";
 const BIGMEM_ELF: &str = "./bigmem/target/mips-unknown-linux-musl/debug/bigmem";
+const SEG_SIZE: usize = 4194304;
 
 const DEGREE_BITS_RANGE: [Range<usize>; 6] = [10..21, 12..22, 12..21, 8..21, 6..21, 13..23];
 
@@ -37,19 +38,22 @@ const DEGREE_BITS_RANGE: [Range<usize>; 6] = [10..21, 12..22, 12..21, 8..21, 6..
 fn main() {
     init_logger();
 
-    // let iters = [230, 460, 920, 1840, 3680];
-    // benchmark(benchmark_sha2_chain, &iters, "../benchmark_outputs/sha2_chain_zkm.csv", "iters");
-    // benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters");
+    let _ = std::fs::remove_dir_all("/tmp/zkm.old");
+    let _ = std::fs::rename("/tmp/zkm", "/tmp/zkm.old");
+
+    let iters = [230, 460, 920, 1840, 3680];
+    benchmark(benchmark_sha2_chain, &iters, "../benchmark_outputs/sha2_chain_zkm.csv", "iters");
+    benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters");
 
     let lengths = [32, 256, 512, 1024, 2048];
     benchmark(benchmark_sha2, &lengths, "../benchmark_outputs/sha2_zkm.csv", "byte length");
-    // benchmark(benchmark_sha3, &lengths, "../benchmark_outputs/sha3_zkm.csv", "byte length");
+    benchmark(benchmark_sha3, &lengths, "../benchmark_outputs/sha3_zkm.csv", "byte length");
 
-    // let ns = [100, 1000, 10000, 50000];
-    // benchmark(benchmark_fibonacci, &ns, "../benchmark_outputs/fiboancci_zkm.csv", "n");
+    let ns = [100, 1000, 10000, 50000];
+    benchmark(benchmark_fibonacci, &ns, "../benchmark_outputs/fiboancci_zkm.csv", "n");
 
-    // let values = [5];
-    // benchmark(benchmark_bigmem, &values, "../benchmark_outputs/bigmem_zkm.csv", "value");
+    let values = [5];
+    benchmark(benchmark_bigmem, &values, "../benchmark_outputs/bigmem_zkm.csv", "value");
 }
 
 fn prove_single_seg_common(
@@ -232,6 +236,7 @@ fn prove_multi_seg_common(
         "proof size: {:?}",
         size
     );
+    /*
     let _result = all_circuits.verify_block(&block_proof);
 
     let build_path = "verifier/data".to_string();
@@ -252,6 +257,7 @@ fn prove_multi_seg_common(
     wrapped_proof.save(path).unwrap();
 
     total_timing.filter(Duration::from_millis(100)).print();
+    */
     size
 }
 
@@ -266,8 +272,8 @@ fn benchmark_sha2_chain(iters: u32) -> (Duration, usize) {
     state.add_input_stream(&input);
     state.add_input_stream(&iters);
     
-    let seg_size = 262144;
-    let seg_path = "/tmp/sha2-chain";
+    let seg_size = SEG_SIZE;
+    let seg_path = "/tmp/zkm/sha2-chain";
 
     let (total_steps, mut state) = split_prog_into_segs(state, seg_path, "", seg_size);
 
@@ -298,8 +304,8 @@ fn benchmark_sha3_chain(iters: u32) -> (Duration, usize) {
     state.add_input_stream(&input);
     state.add_input_stream(&iters);
     
-    let seg_size = 262144;
-    let seg_path = "/tmp/sha3-chain";
+    let seg_size = SEG_SIZE;
+    let seg_path = "/tmp/zkm/sha3-chain";
 
     let (total_steps, mut state) = split_prog_into_segs(state, seg_path, "", seg_size);
 
@@ -330,8 +336,8 @@ fn benchmark_sha2(num_bytes: usize) -> (Duration, usize) {
     let mut state = load_elf_with_patch(SHA2_ELF, vec![]);
     state.add_input_stream(&input);
     
-    let seg_size = 262144;
-    let seg_path = "/tmp/sha2";
+    let seg_size = SEG_SIZE;
+    let seg_path = "/tmp/zkm/sha2";
 
     let (total_steps, mut state) = split_prog_into_segs(state, seg_path, "", seg_size);
 
@@ -361,8 +367,8 @@ fn benchmark_sha3(num_bytes: usize) -> (Duration, usize) {
     let mut state = load_elf_with_patch(SHA3_ELF, vec![]);
     state.add_input_stream(&input);
     
-    let seg_size = 262144;
-    let seg_path = "/tmp/sha3";
+    let seg_size = SEG_SIZE;
+    let seg_path = "/tmp/zkm/sha3";
 
     let (total_steps, mut state) = split_prog_into_segs(state, seg_path, "", seg_size);
 
@@ -390,8 +396,8 @@ fn benchmark_fibonacci(n: u32) -> (Duration, usize) {
     let mut state = load_elf_with_patch(FIBONACCI_ELF, vec![]);
     state.add_input_stream(&n);
 
-    let seg_size = 262144;
-    let seg_path = "/tmp/fibonacci";
+    let seg_size = SEG_SIZE;
+    let seg_path = "/tmp/zkm/fibonacci";
 
     let (total_steps, mut state) = split_prog_into_segs(state, seg_path, "", seg_size);
 
@@ -418,8 +424,8 @@ fn benchmark_bigmem(value: u32) -> (Duration, usize) {
     let mut state = load_elf_with_patch(BIGMEM_ELF, vec![]);
     state.add_input_stream(&value);
 
-    let seg_size = 262144;
-    let seg_path = "/tmp/bigmem";
+    let seg_size = SEG_SIZE;
+    let seg_path = "/tmp/zkm/bigmem";
 
     let (total_steps, mut state) = split_prog_into_segs(state, seg_path, "", seg_size);
 
