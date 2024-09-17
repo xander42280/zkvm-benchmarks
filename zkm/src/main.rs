@@ -24,13 +24,14 @@ use zkm_prover::proof::PublicValues;
 use zkm_prover::prover::prove;
 use zkm_prover::verifier::verify_proof;
 
-const FIBONACCI_ELF: &str = "./fibonacci/target/mips-unknown-linux-musl/debug/fibonacci";
-const SHA2_ELF: &str = "./sha2/target/mips-unknown-linux-musl/debug/sha2-bench";
-const SHA2_CHAIN_ELF: &str = "./sha2-chain/target/mips-unknown-linux-musl/debug/sha2-chain";
-const SHA3_CHAIN_ELF: &str = "./sha3-chain/target/mips-unknown-linux-musl/debug/sha3-chain";
-const SHA3_ELF: &str = "./sha3/target/mips-unknown-linux-musl/debug/sha3-bench";
-const BIGMEM_ELF: &str = "./bigmem/target/mips-unknown-linux-musl/debug/bigmem";
-const SEG_SIZE: usize = 4194304;
+const FIBONACCI_ELF: &str = "./fibonacci/target/mips-unknown-linux-musl/release/fibonacci";
+const SHA2_ELF: &str = "./sha2/target/mips-unknown-linux-musl/release/sha2-bench";
+const SHA2_CHAIN_ELF: &str = "./sha2-chain/target/mips-unknown-linux-musl/release/sha2-chain";
+const SHA3_CHAIN_ELF: &str = "./sha3-chain/target/mips-unknown-linux-musl/release/sha3-chain";
+const SHA3_ELF: &str = "./sha3/target/mips-unknown-linux-musl/release/sha3-bench";
+const BIGMEM_ELF: &str = "./bigmem/target/mips-unknown-linux-musl/release/bigmem";
+//const SEG_SIZE: usize = 4194304;
+const SEG_SIZE: usize = 262144; //G
 
 const DEGREE_BITS_RANGE: [Range<usize>; 6] = [10..21, 12..22, 12..21, 8..21, 6..21, 13..23];
 
@@ -53,7 +54,7 @@ fn main() {
 
     let iters = [230, 460, 920, 1840, 3680];
     benchmark(benchmark_sha2_chain, &iters, "../benchmark_outputs/sha2_chain_zkm.csv", "iters");
-    benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters");
+    benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters"); 
 }
 
 fn prove_single_seg_common(
