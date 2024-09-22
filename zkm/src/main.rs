@@ -9,10 +9,6 @@ use std::ops::Range;
 use plonky2::field::goldilocks_field::GoldilocksField;
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
 use plonky2::util::timing::TimingTree;
-use plonky2x::backend::circuit::Groth16WrapperParameters;
-use plonky2x::backend::wrapper::wrap::WrappedCircuit;
-use plonky2x::frontend::builder::CircuitBuilder as WrapperBuilder;
-use plonky2x::prelude::DefaultParameters;
 
 use zkm_emulator::utils::{load_elf_with_patch, split_prog_into_segs};
 use zkm_prover::all_stark::AllStark;
@@ -30,11 +26,9 @@ const SHA2_CHAIN_ELF: &str = "./sha2-chain/target/mips-unknown-linux-musl/releas
 const SHA3_CHAIN_ELF: &str = "./sha3-chain/target/mips-unknown-linux-musl/release/sha3-chain";
 const SHA3_ELF: &str = "./sha3/target/mips-unknown-linux-musl/release/sha3-bench";
 const BIGMEM_ELF: &str = "./bigmem/target/mips-unknown-linux-musl/release/bigmem";
-//const SEG_SIZE: usize = 4194304;
-const SEG_SIZE: usize = 262144; //G
+const SEG_SIZE: usize = 262144 * 8; //G
 
-const DEGREE_BITS_RANGE: [Range<usize>; 6] = [10..21, 12..22, 12..21, 8..21, 6..21, 13..23];
-
+const DEGREE_BITS_RANGE: [Range<usize>; 6] = [10..23, 10..23, 10..23, 8..23, 6..23, 13..25];
 
 fn main() {
     init_logger();
@@ -54,7 +48,7 @@ fn main() {
 
     let iters = [230, 460, 920, 1840, 3680];
     benchmark(benchmark_sha2_chain, &iters, "../benchmark_outputs/sha2_chain_zkm.csv", "iters");
-    benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters"); 
+    benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters");
 }
 
 fn prove_single_seg_common(
@@ -98,9 +92,6 @@ fn prove_multi_seg_common(
     seg_file_number: usize,
     seg_start_id: usize,
 ) -> usize {
-    type InnerParameters = DefaultParameters;
-    type OuterParameters = Groth16WrapperParameters;
-
     type F = GoldilocksField;
     const D: usize = 2;
     type C = PoseidonGoldilocksConfig;
@@ -237,33 +228,13 @@ fn prove_multi_seg_common(
         "proof size: {:?}",
         size
     );
-    /*
-    let _result = all_circuits.verify_block(&block_proof);
-
-    let build_path = "verifier/data".to_string();
-    let path = format!("{}/test_circuit/", build_path);
-    let builder = WrapperBuilder::<DefaultParameters, 2>::new();
-    let mut circuit = builder.build();
-    circuit.set_data(all_circuits.block.circuit);
-    let mut bit_size = vec![32usize; 16];
-    bit_size.extend(vec![8; 32]);
-    bit_size.extend(vec![64; 68]);
-    let wrapped_circuit = WrappedCircuit::<InnerParameters, OuterParameters, D>::build(
-        circuit,
-        Some((vec![], bit_size)),
-    );
-    log::info!("build finish");
-
-    let wrapped_proof = wrapped_circuit.prove(&block_proof).unwrap();
-    wrapped_proof.save(path).unwrap();
-
     total_timing.filter(Duration::from_millis(100)).print();
-    */
     size
 }
 
 fn init_logger() {
-    std::env::set_var("RUST_LOG", "info");
+    let logl = std::env::var("RUST_LOG").unwrap_or("info".to_string());
+    std::env::set_var("RUST_LOG", &logl);
     env_logger::init()
 }
 
@@ -272,7 +243,7 @@ fn benchmark_sha2_chain(iters: u32) -> (Duration, usize) {
     let mut state = load_elf_with_patch(SHA2_CHAIN_ELF, vec![]);
     state.add_input_stream(&input);
     state.add_input_stream(&iters);
-    
+
     let seg_size = SEG_SIZE;
     let seg_path = "/tmp/zkm/sha2-chain";
 
@@ -304,7 +275,7 @@ fn benchmark_sha3_chain(iters: u32) -> (Duration, usize) {
     let mut state = load_elf_with_patch(SHA3_CHAIN_ELF, vec![]);
     state.add_input_stream(&input);
     state.add_input_stream(&iters);
-    
+
     let seg_size = SEG_SIZE;
     let seg_path = "/tmp/zkm/sha3-chain";
 
@@ -336,7 +307,7 @@ fn benchmark_sha2(num_bytes: usize) -> (Duration, usize) {
     let input = vec![5u8; num_bytes];
     let mut state = load_elf_with_patch(SHA2_ELF, vec![]);
     state.add_input_stream(&input);
-    
+
     let seg_size = SEG_SIZE;
     let seg_path = "/tmp/zkm/sha2";
 
@@ -367,7 +338,7 @@ fn benchmark_sha3(num_bytes: usize) -> (Duration, usize) {
     let input = vec![5u8; num_bytes];
     let mut state = load_elf_with_patch(SHA3_ELF, vec![]);
     state.add_input_stream(&input);
-    
+
     let seg_size = SEG_SIZE;
     let seg_path = "/tmp/zkm/sha3";
 
