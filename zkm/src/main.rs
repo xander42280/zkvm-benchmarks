@@ -74,10 +74,10 @@ fn main() {
 
 fn prove_single_seg_common(seg_file: &str, basedir: &str, block: &str, file: &str) -> usize {
     #[cfg(feature = "gpu")]
-    prove_single_seg_gpu(seg_file, basedir, block, file)
+    {prove_single_seg_gpu(seg_file, basedir, block, file)}
 
     #[cfg(not(feature = "gpu"))]
-    prove_single_seg_cpu(seg_file, basedir, block, file)
+    {prove_single_seg_cpu(seg_file, basedir, block, file)}
 }
 
 #[cfg(not(feature = "gpu"))]
