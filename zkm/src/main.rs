@@ -1,3 +1,4 @@
+#![feature(allocator_api)]
 use std::time::{Duration, Instant};
 
 use utils::benchmark;
@@ -17,9 +18,6 @@ use zkm_prover::cpu::kernel::assembler::segment_kernel;
 use zkm_prover::fixed_recursive_verifier::AllRecursiveCircuits;
 use zkm_prover::proof;
 use zkm_prover::proof::PublicValues;
-use zkm_prover::prover::prove;
-use zkm_prover::verifier::verify_proof;
-
 #[cfg(not(feature = "gpu"))]
 use zkm_prover::prover::prove;
 use zkm_prover::verifier::verify_proof;
@@ -74,12 +72,12 @@ fn main() {
     benchmark(benchmark_sha3_chain, &iters, "../benchmark_outputs/sha3_chain_zkm.csv", "iters");
 }
 
-fn prove_single_seg_common(seg_file: &str, basedir: &str, block: &str, file: &str) {
+fn prove_single_seg_common(seg_file: &str, basedir: &str, block: &str, file: &str) -> usize {
     #[cfg(feature = "gpu")]
-    prove_single_seg_gpu(seg_file, basedir, block, file);
+    prove_single_seg_gpu(seg_file, basedir, block, file)
 
     #[cfg(not(feature = "gpu"))]
-    prove_single_seg_cpu(seg_file, basedir, block, file);
+    prove_single_seg_cpu(seg_file, basedir, block, file)
 }
 
 #[cfg(not(feature = "gpu"))]
