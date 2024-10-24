@@ -7,7 +7,7 @@ edition = "2021"
 [dependencies]
 utils = { path = "../utils" }
 zkm-prover = { git = "https://github.com/zkMIPS/zkm", branch = "main", default-features = false, features = ["gpu"] }
-zkm-emulator = { git = "https://github.com/zkMIPS/zkm", branch = "main", default-features = false, features = ["gpu"] }
+zkm-emulator = { git = "https://github.com/zkMIPS/zkm", branch = "main", default-features = false}
 plonky2 = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
 #starky = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
 plonky2_util = { git = "https://github.com/zkMIPS/plonky2.git", branch = "zkm_dev" }
